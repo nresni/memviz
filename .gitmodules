@@ -1,0 +1,6 @@
+[submodule "vendor/Silex"]
+	path = vendor/Silex
+	url = https://github.com/fabpot/Silex.git
+[submodule "src/vendor/twig"]
+	path = src/vendor/twig
+	url = https://github.com/fabpot/Twig.git
