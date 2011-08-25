@@ -4,3 +4,6 @@
 [submodule "src/vendor/twig"]
 	path = src/vendor/twig
 	url = https://github.com/fabpot/Twig.git
+[submodule "src/vendor/silex-extension"]
+	path = src/vendor/silex-extension
+	url = git@github.com:fate/Silex-Extensions.git
