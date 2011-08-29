@@ -1,7 +1,7 @@
 Ext.define('MV.controller.Main', {
   extend: 'Ext.app.Controller',
 
-  stores: ['Cache'],
+  stores: ['Cache', 'Detail'],
 
   models: ['Cache'],
 
