@@ -23,8 +23,7 @@ class CacheExtension implements ExtensionInterface
 
                 switch ($app['cache.library']) {
                     case 'memcache':
-                        $servers = isset($app['cache.servers']) ? $app['cache.servers'] : array();
-                        $cache = new MemcacheCache($servers);
+                        $cache = new MemcacheCache();
                         break;
                     default:
                         throw new \InvalidArgumentException(sprintf("Unknow < %s > cache library", $app['cache.library']));

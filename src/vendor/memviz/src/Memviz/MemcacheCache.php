@@ -18,12 +18,6 @@ class MemcacheCache extends Memcache
 
         $memcache = new \Memcache();
 
-        $servers = $servers ?: array(array('127.0.0.1', 11211));
-
-        foreach ($servers as $config) {
-            call_user_func_array(array($memcache, 'addServer'), array_values($config));
-        }
-
         $this->setMemcache($memcache);
     }
 
@@ -40,7 +34,7 @@ class MemcacheCache extends Memcache
         $fetched = array();
         foreach ($ids as $id) {
             if (preg_match($regex, $id)) {
-                $fetched[$id] = $this->fetch($id);
+                $fetched[] = array('key' => $id, 'value' => $this->fetch($id));
             }
         }
 
@@ -63,5 +57,45 @@ class MemcacheCache extends Memcache
         }
 
         return $fetched;
+    }
+
+    /**
+     * @param  array $servers
+     * @return void
+     */
+    public function setServers($servers)
+    {
+        foreach ($servers as $config) {
+            call_user_func_array(array($this->getMemcache(), 'addServer'), array_values($config));
+        }
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIds()
+    {
+        $keys = array();
+        $allSlabs = $this->getMemcache()->getExtendedStats('slabs');
+
+        foreach ($allSlabs as $server => $slabs) {
+            if (is_array($slabs)) {
+                foreach (array_keys($slabs) as $slabId) {
+                    if (is_int($slabId)) {
+                        $dump = $this->getMemcache()->getExtendedStats('cachedump', (int)$slabId);
+                        if ($dump) {
+                            foreach ($dump as $entries) {
+                                if ($entries) {
+                                    $keys = array_merge($keys, array_keys($entries));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $keys;
     }
 }

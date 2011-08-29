@@ -3,27 +3,17 @@
 $app = require_once __DIR__ . '/bootstrap.php';
 
 $app->get('/', function () use ($app) {
-    return $app['twig']->render('index.twig');
+    return $app['twig']->render('base.twig');
 });
 
-$app->get('/all', function() use ($app) {
-    return $app['json']($app['cache']->fetchAll());
-});
+$app->get('/search', function() use ($app) {
+    $app['cache']->setServers(array(array($app['request']->get('host'), $app['request']->get('port'))));
 
-$app->get('/{id}', function($id) use ($app) {
-    return $app['json']($app['cache']->fetch($id));
-});
-
-$app->get('/search/key/{key}', function($key) use ($app) {
-    return $app['json']($app['cache']->fetchKeyByRegex("/$key/"));
-});
-
-$app->get('/search/value/{value}', function($value) use ($app) {
-    throw new \BadMethodCallException('Not implemented yet');
-});
-
-$app->get('/search/key/{key}/value/{value}', function($key, $value) use ($app) {
-    throw new \BadMethodCallException('Not implemented yet');
+    if (false !== $query = $app['request']->get('query')) {
+        return $app['json']($app['cache']->fetchKeyByRegex("/$query/"));
+    } else {
+        return $app['json']($app['cache']->fetchAll());
+    }
 });
 
 return $app;
