@@ -30,6 +30,10 @@ Ext.define('MV.controller.Main', {
     });
   },
 
+  /**
+   * 
+   * @param bt
+   */
   formSubmit: function(bt) {
     bt.up('form').getForm().submit({
       scope: this,
@@ -39,6 +43,11 @@ Ext.define('MV.controller.Main', {
     });
   },
 
+  /**
+   *
+   * @param grid
+   * @param record
+   */
   itemDetail: function(grid, record) {
     var entry = record,
       tree = this.getCacheDetail();
@@ -46,25 +55,28 @@ Ext.define('MV.controller.Main', {
       text: record.get('key'),
       expanded: true
     });
-    this.setChildren(record.get('value'), tree.getRootNode());
-  },
 
-  setChildren: function(data, root) {
-    var obj = Ext.JSON.decode(data);
+    var root = tree.getRootNode(),
+    json = Ext.JSON.decode(record.get('value'));
 
-    for (r in obj) {
-      if (Ext.isArray(obj[r])) {
-        for (var i = 0; i < obj[r].length; i++) {
+    for (r in json) {
+      if (Ext.isArray(json[r])) {
+        for (var i = 0; i < json[r].length; i++) {
           var parent = root.appendChild({
             text: i
           });
-          this.formatTree(obj[r][i], parent);
+          this.formatTree(json[r][i], parent);
           parent.expand();
         }
       }
     }
   },
 
+  /**
+   *
+   * @param data
+   * @param root
+   */
   formatTree: function(data, root) {
     var root = root;
     if (Ext.isObject(data)) {
