@@ -43,7 +43,6 @@ Ext.define('MV.view.cache.Detail', {
               if (Ext.isObject(value[key])) {
                 result[key] = this.toArr(value[key]);
               } else if (Ext.isObject(value[key][0])) {
-                result[key];
                 for (i in value[key]) {
                   if (Ext.isDefined(result[key])) {
                     result[key].push(this.toArr(value[key][i]));
@@ -68,8 +67,6 @@ Ext.define('MV.view.cache.Detail', {
                   str += k + " : " + arr[k] + "<br />";
                 }
               }
-            } else {
-              console.log(arr);
             }
 
             return str;
