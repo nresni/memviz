@@ -21,7 +21,7 @@ Ext.define('MV.view.main.Dashboard', {
           },
           {
             region: 'south',
-            height: 500,
+            height: 200,
             minSize: 75,
             maxSize: 250,
             xtype: 'cachedetail'

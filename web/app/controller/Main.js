@@ -46,61 +46,44 @@ Ext.define('MV.controller.Main', {
       text: record.get('key'),
       expanded: true
     });
-    this.getDataTree(record.get('value'), tree.getRootNode());
+    this.setChildren(record.get('value'), tree.getRootNode());
   },
 
-  getDataTree: function(data, root) {
+  setChildren: function(data, root) {
     var obj = Ext.JSON.decode(data);
-    var results = [];
-    Ext.Object.each(obj, function(key, o) {
-      if (key == "success") {
-        return false;
-      }
-      Ext.Object.each(o, function(index, value) {
-        results.push(this.toArr(value));
-      }, this);
-    }, this);
-    for (var i = 0; i < results.length; i++) {
-      var parent = root.appendChild({
-        text: i
-      });
-      this.formatTree(results[i], parent);
-      parent.expand();
-    }
-  },
 
-  toArr: function(value) {
-    var result = [];
-    for (key in value) {
-      if (Ext.isObject(value[key])) {
-        result[key] = this.toArr(value[key]);
-      } else if (Ext.isObject(value[key][0])) {
-        for (i in value[key]) {
-          if (Ext.isDefined(result[key])) {
-            result[key].push(this.toArr(value[key][i]));
-          } else {
-            result[key] = this.toArr(value[key][i]);
-          }
+    for (r in obj) {
+      if (Ext.isArray(obj[r])) {
+        for (var i = 0; i < obj[r].length; i++) {
+          var parent = root.appendChild({
+            text: i
+          });
+          this.formatTree(obj[r][i], parent);
+          parent.expand();
         }
-      } else {
-        result[key] = value[key];
       }
     }
-    return result;
   },
 
-  formatTree: function(arr, root) {
+  formatTree: function(data, root) {
     var root = root;
-    if (Ext.isArray(arr)) {
-      for (k in arr) {
+    if (Ext.isObject(data)) {
+      Ext.Object.each(data, function(index, value) {
         var parent = root.appendChild({
-          text: k
+          text: index
         });
-        this.formatTree(arr[k], parent);
-      }
+        this.formatTree(value, parent);
+      }, this);
+    } else if (Ext.isArray(data)) {
+      Ext.Array.each(data, function(value, index) {
+        var parent = root.appendChild({
+          text: index
+        });
+        this.formatTree(value, parent);
+      }, this);
     } else {
       root.appendChild({
-        text: k,
+        text: data,
         leaf: true
       });
     }
