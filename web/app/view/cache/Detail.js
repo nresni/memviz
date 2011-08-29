@@ -3,6 +3,7 @@ Ext.define('MV.view.cache.Detail', {
   alias : 'widget.cachedetail',
   title : 'Entry detail',
   autoScroll: true,
+  useArrows: true,
 
   initComponent: function() {
     this.callParent(arguments);
