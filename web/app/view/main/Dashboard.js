@@ -20,9 +20,8 @@ Ext.define('MV.view.main.Dashboard', {
             region:'center'
           },
           {
-            title: 'Footer',
             region: 'south',
-            height: 200,
+            height: 500,
             minSize: 75,
             maxSize: 250,
             xtype: 'cachedetail'

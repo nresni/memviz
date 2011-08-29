@@ -4,8 +4,6 @@ Ext.define('MV.view.cache.Detail', {
   title : 'Entry detail',
   autoScroll: true,
 
-  store: 'Detail',
-
   initComponent: function() {
     this.callParent(arguments);
   }
