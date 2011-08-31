@@ -6,10 +6,14 @@ Ext.define('MV.view.cache.List', {
 
   store: 'Cache',
 
+  columnLines: true,
+
+  autoScroll: false,
+
   initComponent: function() {
 
     this.columns = [
-      {header: 'Clé',  dataIndex: 'key',  flex: 1},
+      {header: 'Clé',  dataIndex: 'key', flex: 1},
       {header: 'Valeur', dataIndex: 'value', flex: 1}
     ];
 

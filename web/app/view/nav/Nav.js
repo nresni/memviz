@@ -1,11 +1,12 @@
 Ext.define('MV.view.nav.Nav', {
-  extend: 'Ext.form.Panel',
+  extend: 'Ext.Panel',
   alias : 'widget.nav',
+
   layout: 'vbox',
+
   title: 'Navigation',
-  region:'west',
+
   width: 300,
-  collapsible: true,
 
   initComponent: function() {
     this.items = [
@@ -30,7 +31,7 @@ Ext.define('MV.view.nav.Nav', {
             name: 'port'
           },
           {
-            fieldLabel: 'Term',
+            fieldLabel: 'Term/RegExp',
             name: 'query'
           }
         ],

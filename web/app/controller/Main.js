@@ -1,7 +1,7 @@
 Ext.define('MV.controller.Main', {
   extend: 'Ext.app.Controller',
 
-  stores: ['Cache', 'Detail'],
+  stores: ['Cache'],
 
   models: ['Cache'],
 
@@ -16,6 +16,10 @@ Ext.define('MV.controller.Main', {
     {
       ref: 'cacheDetail',
       selector: 'cachedetail'
+    },
+    {
+      ref: 'cacheList',
+      selector: 'cachelist'
     }
   ],
 
@@ -24,6 +28,13 @@ Ext.define('MV.controller.Main', {
       'nav button[text=Search]': {
         click: this.formSubmit
       },
+      'nav textfield': {
+        specialkey: function(field, e) {
+          if (e.getKey() == e.ENTER) {
+            this.formSubmit(field);
+          }
+        }
+      },
       'cachelist': {
         itemclick: this.itemDetail
       }
@@ -31,14 +42,19 @@ Ext.define('MV.controller.Main', {
   },
 
   /**
-   * 
+   *
    * @param bt
    */
   formSubmit: function(bt) {
+    var cl = this.getCacheList().getEl();
+    cl.mask('Chargement...');
+
     bt.up('form').getForm().submit({
       scope: this,
       success: function(form, action) {
+        this.getCacheStore().removeAll();
         this.getCacheStore().loadData(action.result.data);
+        cl.unmask();
       }
     });
   },
@@ -51,6 +67,9 @@ Ext.define('MV.controller.Main', {
   itemDetail: function(grid, record) {
     var entry = record,
       tree = this.getCacheDetail();
+
+    tree.getEl().mask('Chargement...');
+
     tree.setRootNode({
       text: record.get('key'),
       expanded: true
@@ -59,17 +78,43 @@ Ext.define('MV.controller.Main', {
     var root = tree.getRootNode(),
     json = Ext.JSON.decode(record.get('value'));
 
-    for (r in json) {
-      if (Ext.isArray(json[r])) {
-        for (var i = 0; i < json[r].length; i++) {
+    if (Ext.isDefined(record.get('type')) && record.get('type') == "STRING") {
+      root.appendChild({
+          text: Ext.JSON.decode(record.get('value')),
+          leaf: true
+      });
+    } else {
+      for (r in json) {
+        if (Ext.isArray(json[r])) {
+          var length = json[r].length;
+          if (length) {
+            for (var i = 0; i < json[r].length; i++) {
+              var parent = root.appendChild({
+                text: i
+              });
+              this.formatTree(json[r][i], parent);
+            }
+          } else {
+            root.appendChild({
+              text: r
+            });
+          }
+        } else {
+          var hasChildren = Ext.isDefined(json[r]);
           var parent = root.appendChild({
-            text: i
+            text: r,
+            leaf: ! hasChildren
           });
-          this.formatTree(json[r][i], parent);
-          parent.expand();
+
+          if (hasChildren) {
+            this.formatTree(json[r], parent);
+          }
         }
       }
     }
+
+    tree.expandAll();
+    tree.getEl().unmask();
   },
 
   /**
