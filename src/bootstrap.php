@@ -1,13 +1,13 @@
 <?php
 
-require_once __DIR__.'/vendor/Silex/autoload.php';
+require_once __DIR__.'/vendor/silex.phar';
 
 $app = new Silex\Application();
 
 $app['autoloader']->registerNamespaces(array(
     'Doctrine' => __DIR__ . '/vendor/doctrine-common/lib',
     'Memviz' => __DIR__ . '/vendor/memviz/src',
-    'SilexExtension' => __DIR__ . '/vendor/silex-extension/src'
+    'Twig' => __DIR__ . '/vendor/twig/lib'
 ));
 
 $app->register(new Silex\Extension\TwigExtension(), array(
