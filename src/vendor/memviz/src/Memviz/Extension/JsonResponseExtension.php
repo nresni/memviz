@@ -16,6 +16,14 @@ class JsonResponseExtension implements ExtensionInterface
      */
     function register(Application $app)
     {
+        $string = "sXmlData||<?xml version='1.0' encoding='iso-8859-1'?><data><toto>tutu</toto><JobCategory>2101000:673_674_675_676_811_677_678</JobCategory></data>||erfzefzesXmlData||<?xml version='1.2' encoding='iso-8859-1'?><data><toto>tutu</toto><JobCategory>2101000:673_674_675_676_811_677_678</JobCategory></data>||erfzefze";
+
+        preg_match('/(<\?xml.*>)/', $string, $matches);
+
+        var_dump($matches);
+
+        die();
+
         $app['json'] = $app->protect(function ($body) use ($app)
             {
                 for ($i = 0; $i < count($body); $i++) {

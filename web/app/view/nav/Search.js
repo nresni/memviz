@@ -1,12 +1,11 @@
-Ext.define('MV.view.nav.Nav', {
-  extend: 'Ext.Panel',
-  alias : 'widget.nav',
+Ext.define('MV.view.nav.Search', {
+  extend: 'Ext.panel.Panel',
+  alias : 'widget.navsearch',
 
-  layout: 'vbox',
-
-  title: 'Navigation',
-
+  margins: '5 0 5 5',
   width: 300,
+
+  title: 'Recherche',
 
   initComponent: function() {
     this.items = [
@@ -14,7 +13,7 @@ Ext.define('MV.view.nav.Nav', {
         xtype: 'form',
         layout: 'vbox',
         defaultType: 'textfield',
-        height: 120,
+        height: 150,
         bodyPadding: 10,
         border: false,
         url: '/search',
