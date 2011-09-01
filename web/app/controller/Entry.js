@@ -43,11 +43,8 @@ Ext.define('MV.controller.Entry', {
    */
   executeDetail: function(grid, record) {
     var tree = this.getEntryTree();
-
     tree.getEl().mask('Chargement...');
-
     var entry = this.itemDetail(record, tree);
-
     if (entry) {
       tree.expandAll()
       tree.getEl().unmask();
@@ -61,46 +58,37 @@ Ext.define('MV.controller.Entry', {
    */
   itemDetail: function(record, tree) {
     var entry = record;
-
     tree.setRootNode({
       text: record.get('key'),
       expanded: true
     });
 
     var root = tree.getRootNode(),
-      json = record.get('value');
+      json = Ext.JSON.decode(record.get('value'));
 
-    if (Ext.isDefined(record.get('type')) && record.get('type') == "STRING") {
-      root.appendChild({
-        text: string,
-        leaf: true
-      });
-    } else {
-      for (r in json) {
-        if (Ext.isArray(json[r])) {
-          var length = json[r].length;
-          if (length) {
-            for (var i = 0; i < json[r].length; i++) {
-              var parent = root.appendChild({
-                text: i
-              });
-              this.formatTree(json[r][i], parent);
-            }
-          } else {
-            root.appendChild({
-              text: r
+    for (r in json) {
+      if (Ext.isArray(json[r])) {
+        var length = json[r].length;
+        if (length) {
+          for (var i = 0; i < json[r].length; i++) {
+            var parent = root.appendChild({
+              text: i
             });
+            this.formatTree(json[r][i], parent);
           }
         } else {
-          var hasChildren = Ext.isDefined(json[r]);
-          var parent = root.appendChild({
-            text: r,
-            leaf: ! hasChildren
+          root.appendChild({
+            text: r
           });
-
-          if (hasChildren) {
-            this.formatTree(json[r], parent);
-          }
+        }
+      } else {
+        var hasChildren = Ext.isDefined(json[r]);
+        var parent = root.appendChild({
+          text: r,
+          leaf: ! hasChildren
+        });
+        if (hasChildren) {
+          this.formatTree(json[r], parent);
         }
       }
     }

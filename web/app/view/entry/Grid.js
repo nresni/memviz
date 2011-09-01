@@ -15,6 +15,7 @@ Ext.define('MV.view.entry.Grid', {
 
       columns: [
         {header: 'Clé',  dataIndex: 'key', flex: 1},
+        {header: 'Type',  dataIndex: 'type', flex: 1},
         {header: 'Valeur', dataIndex: 'value', width: 1000}
       ]
     });

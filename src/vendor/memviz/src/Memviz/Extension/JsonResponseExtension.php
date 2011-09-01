@@ -16,22 +16,15 @@ class JsonResponseExtension implements ExtensionInterface
      */
     function register(Application $app)
     {
-        $string = "sXmlData||<?xml version='1.0' encoding='iso-8859-1'?><data><toto>tutu</toto><JobCategory>2101000:673_674_675_676_811_677_678</JobCategory></data>||erfzefzesXmlData||<?xml version='1.2' encoding='iso-8859-1'?><data><toto>tutu</toto><JobCategory>2101000:673_674_675_676_811_677_678</JobCategory></data>||erfzefze";
-
-        preg_match('/(<\?xml.*>)/', $string, $matches);
-
-        var_dump($matches);
-
-        die();
-
-        $app['json'] = $app->protect(function ($body) use ($app)
+        $scope = $this;
+        $app['json'] = $app->protect(function ($body) use ($app, $scope)
             {
                 for ($i = 0; $i < count($body); $i++) {
-                    if (is_string($body[$i]['value']) && preg_match('/.*(<\?xml.*>+).*/', $body[$i]['value'], $matches)) {
-                        $body[$i]['value'] = $app->escape($body[$i]['value']);
-                        $body[$i]['type'] = "STRING";
+                    if (is_string($body[$i]['value']) && preg_match_all('/(<[^<>]*>)\1*/', $body[$i]['value'], $matches)) {
+                        $body[$i]['value'] = $scope->formatXML($body[$i]['value'], $matches, $app);
+                        $body[$i]['type'] = 'XML';
                     } else {
-                        $body[$i]['type'] = "JSON";
+                        $body[$i]['type'] = 'JSON/STRING';
                     }
                 }
 
@@ -41,5 +34,48 @@ class JsonResponseExtension implements ExtensionInterface
 
                 return $response;
             });
+    }
+
+    /**
+     * @param  string $value
+     * @param  array  $matches
+     * @return array
+     */
+    public function formatXML($value, array $matches)
+    {
+        $headers = array();
+        for ($i = 0; $i < count($matches[1]); $i++) {
+            if (strstr($matches[1][$i], '<?xml')) {
+                $headers[] = $matches[1][$i];
+            }
+        }
+
+        $headers = array_unique($headers);
+
+        $xml = array();
+        if (count($headers) == 1) {
+            $arr = explode($headers[0], $value);
+            foreach ($arr as $v) {
+                if (false !== $pos = strrpos($v, '>')) {
+                    $v = substr($v, 0, ($pos + 1));
+                    $xml[] = new \SimpleXMLElement($headers[0] . "<a>" . $v . "</a>");
+                }
+            }
+        } else if (count($headers) > 1) {
+            //@todo: experimental
+            $headers = array_reverse($headers);
+            $lastHeaderPos = $length = strlen($value);
+            foreach ($headers as $header) {
+                $headerPos = strrpos($value, $header);
+                $v = substr($value, ($headerPos), $lastHeaderPos);
+                $pos = strrpos($v, '>');
+                $xml[] = new \SimpleXMLElement(substr($v, 0, ($pos + 1)));
+                $lastHeaderPos = $headerPos - $length;
+            }
+
+            $xml = array_reverse($xml);
+        }
+
+        return $xml;
     }
 }

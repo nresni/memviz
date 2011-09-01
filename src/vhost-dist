@@ -1,0 +1,5 @@
+<VirtualHost *:80>
+  ServerName memviz
+  DocumentRoot /path/to/git/repository/web
+  DirectoryIndex index.php
+</VirtualHost>
