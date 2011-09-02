@@ -46,9 +46,9 @@ Ext.define('MV.controller.Entry', {
     tree.getEl().mask('Chargement...');
     var entry = this.itemDetail(record, tree);
     if (entry) {
-        if (this.getEntryDetail().collapsed) {
-          this.getEntryDetail().toggleCollapse();
-        }
+      if (this.getEntryDetail().collapsed) {
+        this.getEntryDetail().toggleCollapse();
+      }
       tree.expandAll()
       tree.getEl().unmask();
     }
@@ -73,11 +73,15 @@ Ext.define('MV.controller.Entry', {
       if (Ext.isArray(json[r])) {
         var length = json[r].length;
         if (length) {
+          var parent = root.appendChild({
+            text: r
+          });
+
           for (var i = 0; i < json[r].length; i++) {
-            var parent = root.appendChild({
+            var child = parent.appendChild({
               text: i
             });
-            this.formatTree(json[r][i], parent);
+            this.formatTree(json[r][i], child);
           }
         } else {
           root.appendChild({

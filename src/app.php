@@ -10,10 +10,12 @@ $app->get('/search', function() use ($app) {
     $app['cache']->setServers(array(array($app['request']->get('host'), $app['request']->get('port'))));
 
     if (false !== $query = $app['request']->get('query')) {
-        return $app['json']($app['cache']->fetchKeyByRegex("/$query/"));
+        $entries = $app['cache']->fetchKeyByRegex("/$query/");
     } else {
-        return $app['json']($app['cache']->fetchAll());
+        $entries = $app['cache']->fetchAll();
     }
+
+    return $app['json']($entries);
 });
 
 return $app;

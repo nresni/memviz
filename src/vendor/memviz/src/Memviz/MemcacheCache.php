@@ -42,9 +42,8 @@ class MemcacheCache extends Memcache
     }
 
     /**
-     * Fetch cache entries where the id matches a PHP regular expressions
+     * Fetch all cache entries
      *
-     * @param  string $regex
      * @return array  $fetched  Array of the deleted cache ids
      */
     public function fetchAll()
@@ -72,7 +71,9 @@ class MemcacheCache extends Memcache
 
 
     /**
-     * {@inheritdoc}
+     * Returns all cache ds
+     *
+     * @return array
      */
     public function getIds()
     {
