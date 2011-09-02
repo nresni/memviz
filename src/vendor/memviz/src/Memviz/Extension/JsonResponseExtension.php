@@ -22,9 +22,12 @@ class JsonResponseExtension implements ExtensionInterface
                 for ($i = 0; $i < count($body); $i++) {
                     if (is_string($body[$i]['value']) && preg_match_all('/(<[^<>]*>)\1*/', $body[$i]['value'], $matches)) {
                         $body[$i]['value'] = $scope->formatXML($body[$i]['value'], $matches, $app);
-                        $body[$i]['type'] = 'XML';
-                    } else {
-                        $body[$i]['type'] = 'JSON/STRING';
+                        $body[$i]['type'] = 'xml';
+                    } else if (is_bool($body[$i]['value'])) {
+                        $body[$i]['type'] = 'boolean';
+                    }
+                    else {
+                        $body[$i]['type'] = 'json/string';
                     }
                 }
 
@@ -50,30 +53,20 @@ class JsonResponseExtension implements ExtensionInterface
             }
         }
 
-        $headers = array_unique($headers);
+        $headers = array_reverse($headers);
+        $lastHeaderPos = $length = strlen($value);
+        foreach ($headers as $header) {
+            $pos = strrpos($value, $header, ($lastHeaderPos == $length ? 0 : $lastHeaderPos) - 1);
 
-        $xml = array();
-        if (count($headers) == 1) {
-            $arr = explode($headers[0], $value);
-            foreach ($arr as $v) {
-                if (false !== $pos = strrpos($v, '>')) {
-                    $v = substr($v, 0, ($pos + 1));
-                    $xml[] = new \SimpleXMLElement($headers[0] . "<a>" . $v . "</a>");
-                }
-            }
-        } else if (count($headers) > 1) {
-            //@todo: experimental
-            $headers = array_reverse($headers);
-            $lastHeaderPos = $length = strlen($value);
-            foreach ($headers as $header) {
-                $headerPos = strrpos($value, $header);
-                $v = substr($value, ($headerPos), $lastHeaderPos);
-                $pos = strrpos($v, '>');
-                $xml[] = new \SimpleXMLElement(substr($v, 0, ($pos + 1)));
-                $lastHeaderPos = $headerPos - $length;
-            }
+            $v = substr($value, ($pos), $lastHeaderPos);
 
-            $xml = array_reverse($xml);
+            $p = strrpos($v, '>');
+            $str = substr(trim(utf8_encode($v)), 0, ($p + 1));
+
+            $arr = explode($header, $str);
+
+            $xml[] = new \SimpleXMLElement($header . '<a>' . trim(utf8_encode($arr[1])) . '</a>');
+            $lastHeaderPos = $pos - $length;
         }
 
         return $xml;
