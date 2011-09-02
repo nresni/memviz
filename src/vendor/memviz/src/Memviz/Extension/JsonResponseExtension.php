@@ -19,7 +19,8 @@ class JsonResponseExtension implements ExtensionInterface
         $scope = $this;
         $app['json'] = $app->protect(function ($body) use ($app, $scope)
             {
-                for ($i = 0; $i < count($body); $i++) {
+                $total = count($body);
+                for ($i = 0; $i < $total; $i++) {
                     if (is_string($body[$i]['value']) && preg_match_all('/(<[^<>]*>)\1*/', $body[$i]['value'], $matches)) {
                         $body[$i]['value'] = $scope->formatXML($body[$i]['value'], $matches, $app);
                         $body[$i]['type'] = 'xml';
