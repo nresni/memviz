@@ -3,7 +3,6 @@ Ext.define('MV.view.nav.Search', {
   alias : 'widget.navsearch',
 
   margins: '5 0 5 5',
-  width: 300,
 
   title: 'Recherche',
 
@@ -11,32 +10,38 @@ Ext.define('MV.view.nav.Search', {
     this.items = [
       {
         xtype: 'form',
-        layout: 'vbox',
+        layout: 'hbox',
         defaultType: 'textfield',
-        height: 150,
-        bodyPadding: 10,
+        height: 80,
+        bodyPadding: 15,
         border: false,
         url: '/search',
         method: 'Get',
+        defaults: {
+          cls: "search-field"
+        },
         items: [
           {
             value: '127.0.0.1',
             fieldLabel: 'Host',
-            name: 'host'
+            name: 'host',
+            labelWidth: 30
           },
           {
             value: '11211',
             fieldLabel: 'Port',
-            name: 'port'
+            name: 'port',
+            labelWidth: 30
           },
           {
             fieldLabel: 'Term/RegExp',
-            name: 'query'
-          }
-        ],
-        buttons: [
+            name: 'query',
+            labelWidth: 80
+          },
           {
-            text: 'Search'
+            xtype: "button",
+            text: 'Search',
+            marginLeft: 50
           }
         ]
       }

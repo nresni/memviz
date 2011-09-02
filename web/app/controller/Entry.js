@@ -46,6 +46,9 @@ Ext.define('MV.controller.Entry', {
     tree.getEl().mask('Chargement...');
     var entry = this.itemDetail(record, tree);
     if (entry) {
+        if (this.getEntryDetail().collapsed) {
+          this.getEntryDetail().toggleCollapse();
+        }
       tree.expandAll()
       tree.getEl().unmask();
     }

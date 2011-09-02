@@ -5,7 +5,6 @@ Ext.define('MV.view.entry.Tree', {
   autoScroll: true,
   scroll: 'both',
   useArrows: true,
-  border: false,
 
   initComponent: function() {
     this.callParent(arguments);

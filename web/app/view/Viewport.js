@@ -29,7 +29,7 @@ Ext.define('MV.view.Viewport', {
       xtype: 'viewer'
     },
     {
-      region: 'west',
+      region: 'north',
       xtype: 'navsearch',
       split: true,
       collapsible: true

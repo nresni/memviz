@@ -6,8 +6,6 @@ Ext.define('MV.view.entry.Grid', {
 
   title : 'All entries',
 
-  border: false,
-
   initComponent: function() {
 
     Ext.apply(this, {
@@ -15,8 +13,8 @@ Ext.define('MV.view.entry.Grid', {
 
       columns: [
         {header: 'Clé',  dataIndex: 'key', flex: 1},
-        {header: 'Type',  dataIndex: 'type', flex: 1},
-        {header: 'Valeur', dataIndex: 'value', width: 1000}
+        {header: 'Type',  dataIndex: 'type', flex: 0},
+        {header: 'Valeur', dataIndex: 'value', flex: 3}
       ]
     });
 

@@ -25,20 +25,28 @@ Ext.define('MV.view.Viewer', {
 
   margins: '5 5 5 5',
 
+  defaults: {
+    split: true,
+    collapsible: true,
+    border: false
+  },
+
   initComponent: function() {
     this.items = [
       {
         xtype: 'entrygrid',
-        region: 'center'
+        region: 'center',
+        flex: 2,
+        collapseDirection: "left"
       },
       {
         xtype: 'entrydetail',
-        region: 'south',
-        split: true,
-        collapsible: true
+        region: 'east',
+        flex: 1
       }
     ];
 
     this.callParent(arguments);
   }
-});
+})
+  ;
