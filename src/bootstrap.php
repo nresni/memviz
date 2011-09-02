@@ -6,13 +6,12 @@ $app = new Silex\Application();
 
 $app['autoloader']->registerNamespaces(array(
     'Doctrine' => __DIR__ . '/vendor/doctrine-common/lib',
-    'Memviz' => __DIR__ . '/vendor/memviz/src',
-    'Twig' => __DIR__ . '/vendor/twig/lib'
+    'Memviz' => __DIR__ . '/vendor/memviz/src'
 ));
 
 $app->register(new Silex\Extension\TwigExtension(), array(
     'twig.path' => __DIR__ . '/views',
-    'twig.class_path' => __DIR__ . '/vendor/twig/lib'
+    'twig.class_path' => __DIR__ . '/vendor/silex/vendor/twig/lib'
 ));
 
 $app->register(new Memviz\Extension\CacheExtension(), array('cache.library' => 'memcache'));
