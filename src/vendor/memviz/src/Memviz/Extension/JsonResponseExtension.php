@@ -19,6 +19,7 @@ class JsonResponseExtension implements ExtensionInterface
         $scope = $this;
         $app['json'] = $app->protect(function ($body) use ($app, $scope)
             {
+                //@todo refactor
                 $total = count($body);
                 for ($i = 0; $i < $total; $i++) {
                     if (is_string($body[$i]['value']) && preg_match_all('/(<[^<>]*>)\1*/', $body[$i]['value'], $matches)) {
@@ -41,6 +42,8 @@ class JsonResponseExtension implements ExtensionInterface
     }
 
     /**
+     * Experimental
+     *
      * @param  string $value
      * @param  array  $matches
      * @return array
@@ -48,7 +51,8 @@ class JsonResponseExtension implements ExtensionInterface
     public function formatXML($value, array $matches)
     {
         $headers = array();
-        for ($i = 0; $i < count($matches[1]); $i++) {
+        $total = count($matches[1]);
+        for ($i = 0; $i < $total; $i++) {
             if (strstr($matches[1][$i], '<?xml')) {
                 $headers[] = $matches[1][$i];
             }
@@ -58,15 +62,12 @@ class JsonResponseExtension implements ExtensionInterface
         $lastHeaderPos = $length = strlen($value);
         foreach ($headers as $header) {
             $pos = strrpos($value, $header, ($lastHeaderPos == $length ? 0 : $lastHeaderPos) - 1);
-
-            $v = substr($value, ($pos), $lastHeaderPos);
-
-            $p = strrpos($v, '>');
-            $str = substr(trim(utf8_encode($v)), 0, ($p + 1));
-
+            $v = substr($value, $pos, $lastHeaderPos);
+            $vp = strrpos($v, '>');
+            $str = substr(trim(utf8_encode($v)), 0, ($vp + 1));
             $arr = explode($header, $str);
 
-            $xml[] = new \SimpleXMLElement($header . '<a>' . trim(utf8_encode($arr[1])) . '</a>');
+            $xml[] = new \SimpleXMLElement($header . '<a>' . $arr[1] . '</a>');
             $lastHeaderPos = $pos - $length;
         }
 
